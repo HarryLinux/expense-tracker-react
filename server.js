@@ -2,14 +2,21 @@ const express = require("express");
 const dotenv = require("dotenv");
 const colors = require("colors");
 const morgan = require("morgan");
+const connectDB = require("./config/db");
+const PORT = process.env.PORT || 3001;
 
-dotenv.config({ path: "./config/config.env" });
+dotenv.config();
+
+connectDB();
+
+const transactions = require("./routes/transactions");
 
 const app = express();
 
-app.get("/", (req, res) => res.send("Hello"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-const PORT = process.env.PORT || 3001;
+app.use("/api/v1/transactions", transactions);
 
 app.listen(
   PORT,
